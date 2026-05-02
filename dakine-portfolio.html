@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dakine — Tech Content Strategist</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --accent1: #ff4d00;
+    --accent2: #7c3aed;
+    --accent3: #00c9a7;
+    --accent4: #fbbf24;
+    --muted: #6b6660;
+    --card-bg: #ffffff;
+    --border: #e2ddd6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  header {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-left {
+    padding: 4rem 3rem 4rem 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .header-right {
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-right::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent2) 0%, transparent 70%);
+    opacity: 0.3;
+    top: -100px;
+    right: -100px;
+  }
+
+  .header-right::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent1) 0%, transparent 70%);
+    opacity: 0.2;
+    bottom: -50px;
+    left: -50px;
+  }
+
+  .big-initial {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(12rem, 20vw, 18rem);
+    color: var(--paper);
+    opacity: 0.06;
+    position: absolute;
+    bottom: -2rem;
+    right: 1rem;
+    line-height: 1;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .header-tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent1);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .header-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1.05;
+    color: var(--paper);
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .header-name span {
+    color: var(--accent3);
+    font-style: italic;
+  }
+
+  .header-descriptor {
+    font-size: 0.9rem;
+    color: rgba(245,240,232,0.55);
+    margin-top: 1.5rem;
+    line-height: 1.7;
+    max-width: 320px;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .header-cta {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--accent1);
+    color: white;
+    border: 2px solid var(--accent1);
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--accent1); }
+
+  .btn-ghost {
+    background: transparent;
+    color: rgba(245,240,232,0.7);
+    border: 2px solid rgba(245,240,232,0.2);
+  }
+
+  .btn-ghost:hover { border-color: var(--accent3); color: var(--accent3); }
+
+  /* LEFT SIDE HEADER */
+  .header-left-inner {
+    padding: 5rem 4rem 5rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .left-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .left-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .left-headline em {
+    color: var(--accent2);
+    font-style: italic;
+  }
+
+  .left-body {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 440px;
+    margin-bottom: 2rem;
+  }
+
+  .contact-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contact-item:hover { color: var(--accent1); }
+
+  .contact-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent1);
+    flex-shrink: 0;
+  }
+
+  /* SECTION LAYOUT */
+  section {
+    padding: 6rem 5rem;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent1);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 40px;
+    background: var(--accent1);
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.15;
+    margin-bottom: 3rem;
+  }
+
+  /* SERVICES */
+  #services {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  #services .section-label { color: var(--accent3); }
+  #services .section-label::after { background: var(--accent3); }
+  #services .section-title { color: var(--paper); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .service-item {
+    padding: 2rem;
+    background: var(--ink);
+    transition: background 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-item::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent3);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .service-item:hover::before { transform: scaleX(1); }
+  .service-item:hover { background: rgba(255,255,255,0.03); }
+
+  .service-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent3);
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+
+  .service-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--paper);
+    line-height: 1.4;
+  }
+
+  /* WORK GRID */
+  #work { background: var(--paper); }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+  }
+
+  .work-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+    color: var(--ink);
+    display: block;
+  }
+
+  .work-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  }
+
+  .work-card.large { grid-column: span 7; }
+  .work-card.medium { grid-column: span 5; }
+  .work-card.half { grid-column: span 6; }
+  .work-card.third { grid-column: span 4; }
+  .work-card.full { grid-column: span 12; }
+
+  .card-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 1.25rem;
+  }
+
+  .tag-video { background: rgba(255,77,0,0.1); color: var(--accent1); }
+  .tag-article { background: rgba(124,58,237,0.1); color: var(--accent2); }
+  .tag-thread { background: rgba(0,201,167,0.1); color: var(--accent3); }
+  .tag-win { background: rgba(251,191,36,0.1); color: #b45309; }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+    color: var(--ink);
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent1);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    transition: gap 0.2s;
+  }
+
+  .card-link:hover { gap: 0.8rem; }
+
+  .card-accent-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+  }
+
+  /* RECOGNITION */
+  #recognition {
+    background: var(--accent2);
+    color: white;
+  }
+
+  #recognition .section-label { color: var(--accent4); }
+  #recognition .section-label::after { background: var(--accent4); }
+  #recognition .section-title { color: white; }
+
+  .wins-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .win-item {
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 1.75rem;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .win-item:hover { border-color: var(--accent4); }
+
+  .win-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .win-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+    color: white;
+  }
+
+  .win-desc {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+  }
+
+  /* CREDENTIALS */
+  #credentials { background: var(--paper); }
+
+  .creds-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .cred-card {
+    border-left: 3px solid var(--accent1);
+    padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+    background: white;
+  }
+
+  .cred-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    color: var(--ink);
+  }
+
+  .cred-org {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* CURRENTLY */
+  #currently {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  #currently .section-label { color: var(--accent4); }
+  #currently .section-label::after { background: var(--accent4); }
+  #currently .section-title { color: var(--paper); }
+
+  .roles-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    max-width: 700px;
+  }
+
+  .role-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--ink);
+    transition: background 0.2s;
+    gap: 1rem;
+  }
+
+  .role-row:hover { background: rgba(255,255,255,0.04); }
+
+  .role-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--paper);
+    margin-bottom: 0.25rem;
+  }
+
+  .role-org {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .role-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(245,240,232,0.3);
+    white-space: nowrap;
+  }
+
+  /* CONTACT */
+  #contact {
+    background: var(--accent1);
+    color: white;
+    text-align: center;
+    padding: 8rem 5rem;
+  }
+
+  #contact .section-label { color: rgba(255,255,255,0.6); justify-content: center; }
+  #contact .section-label::after { display: none; }
+  #contact .section-label::before { content: ''; display: block; height: 1px; width: 40px; background: rgba(255,255,255,0.6); }
+
+  .contact-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    color: white;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+  }
+
+  .contact-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.75rem;
+    border: 2px solid rgba(255,255,255,0.4);
+    color: white;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .contact-link:hover { background: white; color: var(--accent1); border-color: white; }
+
+  /* DIVIDER */
+  .slash-divider {
+    font-family: 'DM Serif Display', serif;
+    font-size: 8rem;
+    color: rgba(0,0,0,0.04);
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: var(--accent1); border-radius: 2px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    header { grid-template-columns: 1fr; min-height: auto; }
+    .header-right { min-height: 50vh; }
+    .header-left-inner { padding: 3rem 2rem; }
+    section { padding: 4rem 2rem; }
+    .work-card.large, .work-card.medium, .work-card.half, .work-card.third { grid-column: span 12; }
+    #contact { padding: 5rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left-inner reveal">
+    <div class="left-label">Portfolio — 2024/2025</div>
+    <h1 class="left-headline">
+      Tech Content<br/>
+      that <em>actually</em><br/>
+      lands.
+    </h1>
+    <p class="left-body">
+      I am Blessed Ohuoba — Dakine. I write, strategise, and create video content across blockchain, emerging tech, and digital products. Two years of verified output. No filler.
+    </p>
+    <div class="contact-row">
+      <a href="mailto:web3dakine@gmail.com" class="contact-item">
+        <span class="contact-dot"></span> web3dakine@gmail.com
+      </a>
+      <a href="https://x.com/__dakine" class="contact-item" target="_blank">
+        <span class="contact-dot"></span> @__dakine on X
+      </a>
+      <a href="https://www.linkedin.com/in/blessed-ohuoba" class="contact-item" target="_blank">
+        <span class="contact-dot"></span> Blessed Ohuoba on LinkedIn
+      </a>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div style="position:relative;z-index:2;padding:3rem;text-align:left;">
+      <div class="header-tagline">Blockchain, made human</div>
+      <div class="header-name">Blessed<br/><span>Ohuoba</span><br/>(Dakine)</div>
+      <p class="header-descriptor">
+        Content Strategist · Writer · Video Creator<br/>
+        PBA-X Certified · SEO · Editorial Strategy
+      </p>
+      <div class="header-cta">
+        <a href="mailto:web3dakine@gmail.com" class="btn btn-primary">Hire Me</a>
+        <a href="#work" class="btn btn-ghost">View Work ↓</a>
+      </div>
+    </div>
+    <div class="big-initial">D</div>
+  </div>
+</header>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What I Do</div>
+  <h2 class="section-title">Services</h2>
+  <div class="services-grid">
+    <div class="service-item reveal">
+      <div class="service-num">01</div>
+      <div class="service-name">Content Strategy &amp; Editorial Planning</div>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-num">02</div>
+      <div class="service-name">Long-Form Articles &amp; Blog Posts</div>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-num">03</div>
+      <div class="service-name">X Threads &amp; Social Content</div>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-num">04</div>
+      <div class="service-name">Video Scripts &amp; Animated Explainers</div>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-num">05</div>
+      <div class="service-name">SEO Writing</div>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-num">06</div>
+      <div class="service-name">Space Recaps &amp; Governance Comms</div>
+    </div>
+    <div class="service-item reveal">
+      <div class="service-num">07</div>
+      <div class="service-name">Community Content &amp; Ecosystem Education</div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-label">Selected Work</div>
+  <h2 class="section-title">What I've Built</h2>
+
+  <div class="work-grid">
+
+    <!-- VIDEO: JAM -->
+    <a href="https://x.com/__dakine" target="_blank" class="work-card large reveal">
+      <div class="card-accent-bar" style="background: linear-gradient(90deg, var(--accent1), var(--accent4));"></div>
+      <span class="card-type tag-video">Video</span>
+      <div class="card-title">JAM: The Most Underrated Build in Crypto Right Now</div>
+      <p class="card-desc">Animated explainer breaking down Polkadot's Join-Accumulate Machine for non-technical audiences. One of my most technically demanding scripts to date.</p>
+      <span class="card-link">Watch on X →</span>
+    </a>
+
+    <!-- VIDEO: Sacred Protocol -->
+    <a href="https://x.com/i/status/1992840597460091351" target="_blank" class="work-card medium reveal">
+      <div class="card-accent-bar" style="background: var(--accent1);"></div>
+      <span class="card-type tag-video">Video</span>
+      <div class="card-title">Sacred Protocol Explainer</div>
+      <p class="card-desc">Created an explainer video for Sacred Protocol, a Web3 tipping platform. The video saw high engagement on release.</p>
+      <span class="card-link">Watch on X →</span>
+    </a>
+
+    <!-- VIDEO: Hyperbridge -->
+    <a href="https://x.com/i/status/2025240955268235690" target="_blank" class="work-card half reveal">
+      <div class="card-accent-bar" style="background: linear-gradient(90deg, var(--accent2), var(--accent3));"></div>
+      <span class="card-type tag-video">Video</span>
+      <div class="card-title">Hyperbridge Cross-Chain Infrastructure</div>
+      <p class="card-desc">Video content covering Hyperbridge's cross-chain infrastructure and its place in the broader interoperability landscape.</p>
+      <span class="card-link">Watch on X →</span>
+    </a>
+
+    <!-- VIDEO: Jupiter Academy -->
+    <a href="https://x.com/i/status/2043947798303809637" target="_blank" class="work-card half reveal">
+      <div class="card-accent-bar" style="background: linear-gradient(90deg, var(--accent3), var(--accent4));"></div>
+      <span class="card-type tag-video">Video</span>
+      <div class="card-title">Jupiter Academy Educational Video</div>
+      <p class="card-desc">Educational video produced for the Jupiter Academy creator fund. Scripted and produced to Jupiter's editorial standards.</p>
+      <span class="card-link">Watch on X →</span>
+    </a>
+
+    <!-- ARTICLE: JAM WAGmedia -->
+    <a href="https://share.google/69aju5ohxxIAnpkMF" target="_blank" class="work-card third reveal">
+      <div class="card-accent-bar" style="background: var(--accent2);"></div>
+      <span class="card-type tag-article">Article</span>
+      <div class="card-title">JAM — WAGmedia Deep Dive</div>
+      <p class="card-desc">Published on WAGmedia. Full technical breakdown of the JAM upgrade for Polkadot.</p>
+      <span class="card-link">Read →</span>
+    </a>
+
+    <!-- ARTICLE: Medium 1 -->
+    <a href="https://medium.com/@web3dakine/the-p2p-vendor-who-froze-my-friends-account-did-him-a-favour-it-forced-us-both-to-find-xpend-54f3f0e06af6" target="_blank" class="work-card third reveal">
+      <div class="card-accent-bar" style="background: var(--accent2);"></div>
+      <span class="card-type tag-article">Medium</span>
+      <div class="card-title">The P2P Vendor Who Froze My Friend's Account</div>
+      <p class="card-desc">A narrative piece on peer-to-peer crypto trading friction and how Xpend changed the experience.</p>
+      <span class="card-link">Read on Medium →</span>
+    </a>
+
+    <!-- ARTICLE: Medium 2 -->
+    <a href="https://medium.com/@web3dakine/i-almost-sold-my-soul-yesterday-then-busha-saved-my-sol-4e8ae4d7c516" target="_blank" class="work-card third reveal">
+      <div class="card-accent-bar" style="background: var(--accent2);"></div>
+      <span class="card-type tag-article">Medium</span>
+      <div class="card-title">I Almost Sold My Soul. Then Busha Saved My SOL.</div>
+      <p class="card-desc">Personal finance meets crypto in this narrative piece published on Medium.</p>
+      <span class="card-link">Read on Medium →</span>
+    </a>
+
+    <!-- THREADS -->
+    <div class="work-card full reveal" style="background: var(--ink); border-color: transparent;">
+      <div class="card-accent-bar" style="background: linear-gradient(90deg, var(--accent3), var(--accent2), var(--accent1));"></div>
+      <span class="card-type tag-thread">X Threads</span>
+      <div class="card-title" style="color:var(--paper);">Selected Threads</div>
+      <p class="card-desc" style="color:rgba(245,240,232,0.55); margin-bottom: 1.5rem;">A collection of high-performing threads covering blockchain infrastructure, governance, and ecosystem developments.</p>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+        <a href="https://x.com/i/status/2047586451399844184" target="_blank" class="card-link">Thread 01 →</a>
+        <a href="https://x.com/i/status/2043738640791077131" target="_blank" class="card-link">Thread 02 →</a>
+        <a href="https://x.com/i/status/2002303005698244711" target="_blank" class="card-link">Thread 03 →</a>
+        <a href="https://x.com/i/status/1930305109981868235" target="_blank" class="card-link">Thread 04 →</a>
+        <a href="https://x.com/i/status/1940181509081583662" target="_blank" class="card-link">Thread 05 →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- RECOGNITION -->
+<section id="recognition">
+  <div class="section-label">Proof of Work</div>
+  <h2 class="section-title">Recognition &amp; Wins</h2>
+  <div class="wins-list">
+    <div class="win-item reveal">
+      <span class="win-icon">🥇</span>
+      <div class="win-title">DotDashYap Campaign — 1st Place</div>
+      <div class="win-desc">First position in Week 2 of the DotDashYap content campaign, with honorable mentions in Weeks 3 and 4 consecutively.</div>
+    </div>
+    <div class="win-item reveal">
+      <span class="win-icon">🏆</span>
+      <div class="win-title">Moonbeam Contest Winner</div>
+      <div class="win-desc">Won a writing and content contest run by the Moonbeam ecosystem.</div>
+    </div>
+    <div class="win-item reveal">
+      <span class="win-icon">📊</span>
+      <div class="win-title">Polkadot Kaito Leaderboard</div>
+      <div class="win-desc">Ranked on the Polkadot Kaito leaderboard, recognising consistent high-quality ecosystem content output.</div>
+    </div>
+    <div class="win-item reveal">
+      <span class="win-icon">✍️</span>
+      <div class="win-title">Multiple Ecosystem Bounty Wins</div>
+      <div class="win-desc">First-place finishes across multiple Web3 writing and content bounty competitions on Superteam Earn and ecosystem programs.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDENTIALS -->
+<section id="credentials">
+  <div class="section-label">Credentials</div>
+  <h2 class="section-title">Education &amp; Certifications</h2>
+  <div class="creds-grid">
+    <div class="cred-card reveal">
+      <div class="cred-title">PBA-X Certification</div>
+      <div class="cred-org">Polkadot Blockchain Academy</div>
+    </div>
+    <div class="cred-card reveal" style="border-color: var(--accent2);">
+      <div class="cred-title">Google Fundamentals of Digital Marketing</div>
+      <div class="cred-org">Google</div>
+    </div>
+    <div class="cred-card reveal" style="border-color: var(--accent3);">
+      <div class="cred-title">Advanced SEO Certification</div>
+      <div class="cred-org">Simplilearn</div>
+    </div>
+    <div class="cred-card reveal" style="border-color: var(--accent4);">
+      <div class="cred-title">BSc Human Anatomy</div>
+      <div class="cred-org">Nnamdi Azikiwe University — 2023</div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRENTLY -->
+<section id="currently">
+  <div class="section-label">Active Roles</div>
+  <h2 class="section-title">Currently Working With</h2>
+  <div class="roles-stack">
+    <div class="role-row reveal">
+      <div>
+        <div class="role-name">Content Lead</div>
+        <div class="role-org">dotjobs_online</div>
+      </div>
+      <div class="role-year">2024 – Present</div>
+    </div>
+    <div class="role-row reveal">
+      <div>
+        <div class="role-name">Commissioned Writer</div>
+        <div class="role-org">WAGmedia</div>
+      </div>
+      <div class="role-year">2024 – 2026</div>
+    </div>
+    <div class="role-row reveal">
+      <div>
+        <div class="role-name">Core Contributor</div>
+        <div class="role-org">Unchained Dorks</div>
+      </div>
+      <div class="role-year">2025 – Present</div>
+    </div>
+    <div class="role-row reveal">
+      <div>
+        <div class="role-name">Freelance Tech Content Writer</div>
+        <div class="role-org">Independent</div>
+      </div>
+      <div class="role-year">2022 – Present</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Get in Touch</div>
+  <h2 class="contact-headline">Let's work<br/>together.</h2>
+  <p class="contact-sub">Open to freelance projects, commissioned articles,<br/>video scripts, and content strategy retainers.</p>
+  <div class="contact-links">
+    <a href="mailto:web3dakine@gmail.com" class="contact-link">✉ Email Me</a>
+    <a href="https://x.com/__dakine" target="_blank" class="contact-link">𝕏 @__dakine</a>
+    <a href="https://www.linkedin.com/in/blessed-ohuoba" target="_blank" class="contact-link">in LinkedIn</a>
+  </div>
+</section>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Trigger header reveals on load
+  document.querySelectorAll('header .reveal, .header-left-inner').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 200 + i * 100);
+  });
+</script>
+</body>
+</html>
